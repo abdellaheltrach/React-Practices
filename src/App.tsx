@@ -1,38 +1,65 @@
-import React from "react";
-import "./App.css";
-import { Header } from "./Header";
-import { Post } from "./Post";
-import { Side } from "./Side";
+import { useState } from "react";
 
-function App() {
-  const PostArr: { id?: number; Title?: string; Body?: string }[] = [
-    { id: 1, Title: "Hello there", Body: "hi from the body :-)" },
-    { id: 2, Title: "how is the day today", Body: "hi from the body :-)" },
-    { id: 3, Title: "news", Body: "hi from the body :-)" },
-    { id: 4, Title: "React is great", Body: "hi from the body :-)" },
-  ];
+interface Player {
+  firstName: string;
+  lastName: string;
+  score: number;
+}
 
-  const PostList = PostArr.map((p, indedx) => (
-    <div key={p.id ?? indedx}>
-      <Post Title={p.Title} Body={p.Body} />
-    </div>
-  ));
+export default function Scoreboard() {
+  const [player, setPlayer] = useState<Player>({
+    firstName: "Ranjani",
+    lastName: "Shettar",
+    score: 10,
+  });
+
+  function handlePlusClick() {
+    setPlayer({ ...player, score: player.score + 1 });
+  }
+
+  function handleFirstNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setPlayer({
+      ...player,
+      firstName: e.target.value,
+    });
+  }
+
+  function handleLastNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setPlayer({
+      ...player,
+      lastName: e.target.value,
+    } ); 
+  }
 
   return (
-    <div>
-      <Header />
-      <div className="flex justify-center ">
-        <div className="flex justify-center gap-5 w-[70%]">
-          <div className="w-[50%]">
-            {PostList}
-          </div>
-          <div className="w-[30%]">
-            <Side />
-          </div>
-        </div>
-      </div>
+    <div className="p-6 max-w-md mx-auto bg-gray-100 rounded-lg shadow-md space-y-4">
+      <label className="block text-lg">
+        Score: <b>{player.score}</b>{" "}
+        <button
+          className="ml-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+          onClick={handlePlusClick}
+        >
+          +1
+        </button>
+      </label>
+
+      <label className="block">
+        First name:
+        <input
+          className="ml-2 border border-gray-300 rounded px-2 py-1"
+          value={player.firstName}
+          onChange={handleFirstNameChange}
+        />
+      </label>
+
+      <label className="block">
+        Last name:
+        <input
+          className="ml-2 border border-gray-300 rounded px-2 py-1"
+          value={player.lastName}
+          onChange={handleLastNameChange}
+        />
+      </label>
     </div>
   );
 }
-
-export default App;
