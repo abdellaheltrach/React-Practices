@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: center; /* center horizontally */
+  align-items: center; /* center vertically */
+  min-height: 100vh; /* make body take full viewport height */
+  margin: 0; /* remove default body margin */
+}
+
+.center {
+  display: flex;
+  justify-content: center; /* center horizontally */
+
+}
+
+
