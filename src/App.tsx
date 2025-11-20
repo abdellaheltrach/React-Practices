@@ -1,15 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Container, TextField } from "@mui/material";
 import RenderTaskList from "./RenderTaskList";
-
-interface Task {
-  id: number;
-  title: string;
-  description: string;
-  isCompleted: boolean;
-}
-
-type FilterType = "all" | "completed" | "pending";
+import { Task, FilterType } from "./types";
 
 export default function ToDoApp() {
   const [taskArr, setTaskArr] = useState<Task[]>(() => {
