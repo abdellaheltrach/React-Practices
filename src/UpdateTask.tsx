@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Task } from "./types";
+import { toast } from "react-hot-toast";
 
 interface EditTaskProps {
   taskArr: Task[];
@@ -28,6 +29,7 @@ export default function EditTask({
       prev.map((t) => (t.id === TaskToUpdate.id ? updatedTask : t))
     );
     setTaskToUpdate(null);
+    toast.success("Task updated successfully");
   };
 
   return (

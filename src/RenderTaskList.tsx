@@ -5,6 +5,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditTask from "./UpdateTask";
 import { Task, FilterType } from "./types";
 import { motion, AnimatePresence } from "framer-motion";
+import ConfirmDialog from "./ConfirmDialog";
+import { toast } from "react-hot-toast";
 
 interface RenderTaskListProps {
   TaskArr: Task[];
@@ -18,6 +20,7 @@ export default function RenderTaskList({
   Filter,
 }: RenderTaskListProps) {
   const [SelectedtaskToUpdate, setTaskToUpdate] = useState<Task | null>(null);
+  const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
 
   const filteredTasks = useMemo(() => {
     switch (Filter) {
@@ -31,6 +34,25 @@ export default function RenderTaskList({
         return TaskArr;
     }
   }, [TaskArr, Filter]);
+
+  const confirmDelete = () => {
+    if (taskToDelete) {
+      setTaskArr((prev) => prev.filter((t) => t.id !== taskToDelete.id));
+      setTaskToDelete(null);
+      toast.success("Task deleted successfully");
+    }
+  };
+
+  const toggleComplete = (task: Task) => {
+    setTaskArr((prev) =>
+      prev.map((t) =>
+        t.id === task.id ? { ...t, isCompleted: !t.isCompleted } : t
+      )
+    );
+    toast.success(
+      task.isCompleted ? "Task marked as pending" : "Task marked as completed"
+    );
+  };
 
   return (
     <div className="space-y-2 overflow-y-scroll max-h-[50vh] overflow-x-hidden p-1">
@@ -65,15 +87,7 @@ export default function RenderTaskList({
             <div className="flex space-x-2">
               {/* Complete Icon */}
               <button
-                onClick={() =>
-                  setTaskArr((prev) =>
-                    prev.map((t) =>
-                      t.id === task.id
-                        ? { ...t, isCompleted: !t.isCompleted }
-                        : t
-                    )
-                  )
-                }
+                onClick={() => toggleComplete(task)}
                 className={`p-2 rounded-full hover:bg-green-100`}
               >
                 {task.isCompleted ? (
@@ -93,9 +107,7 @@ export default function RenderTaskList({
 
               {/* Delete Icon */}
               <button
-                onClick={() =>
-                  setTaskArr((prev) => prev.filter((t) => t.id !== task.id))
-                }
+                onClick={() => setTaskToDelete(task)}
                 className="p-2 rounded-full hover:bg-red-100"
               >
                 <DeleteIcon className="text-red-600" />
@@ -119,6 +131,13 @@ export default function RenderTaskList({
           setTaskToUpdate={setTaskToUpdate}
         />
       )}
+      <ConfirmDialog
+        isOpen={!!taskToDelete}
+        title="Delete Task"
+        message={`Are you sure you want to delete "${taskToDelete?.title}"?`}
+        onConfirm={confirmDelete}
+        onCancel={() => setTaskToDelete(null)}
+      />
     </div>
   );
 }

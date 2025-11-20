@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Container, TextField } from "@mui/material";
 import RenderTaskList from "./RenderTaskList";
 import { Task, FilterType } from "./types";
+import { Toaster, toast } from "react-hot-toast";
 
 export default function ToDoApp() {
   const [taskArr, setTaskArr] = useState<Task[]>(() => {
@@ -30,9 +31,11 @@ export default function ToDoApp() {
     ]);
 
     setNewTask({ id: 0, title: "", description: "", isCompleted: false }); // reset input
+    toast.success("Task added successfully!");
   }
   return (
     <Container className="bg-white mt-24 py-4 space-y-3" maxWidth="sm">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="flex justify-center">
         <h1 className="text-3xl">My Tasks</h1>
       </div>
