@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import { Button, Container, TextField } from "@mui/material";
 import RenderTaskList from "./RenderTaskList";
 import { Task, FilterType } from "./types";
 import { Toaster, toast } from "react-hot-toast";
+import { taskReducer } from "./reducers/taskReducer";
 
-import logo from "./assets/logo.png";
 
 export default function ToDoApp() {
-  const [taskArr, setTaskArr] = useState<Task[]>(() => {
+  const [taskArr, dispatch] = useReducer(taskReducer, [], () => {
     const saved = localStorage.getItem("tasks");
     return saved ? JSON.parse(saved) : [];
   });
@@ -27,10 +27,8 @@ export default function ToDoApp() {
   function addTask() {
     if (!newTask.title.trim()) return; // prevent empty titles
 
-    setTaskArr((prev) => [
-      ...prev,
-      { ...newTask, id: Date.now(), isCompleted: false },
-    ]);
+    const taskToAdd = { ...newTask, id: Date.now(), isCompleted: false };
+    dispatch({ type: "ADD_TASK", payload: taskToAdd });
 
     setNewTask({ id: 0, title: "", description: "", isCompleted: false }); // reset input
     toast.success("Task added successfully!");
@@ -69,7 +67,7 @@ export default function ToDoApp() {
       <div className="space-y-2">
         <RenderTaskList
           TaskArr={taskArr}
-          setTaskArr={setTaskArr}
+          dispatch={dispatch}
           Filter={filter}
         />
       </div>

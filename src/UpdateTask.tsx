@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { Task } from "./types";
 import { toast } from "react-hot-toast";
+import { TaskAction } from "./reducers/taskReducer";
 
 interface EditTaskProps {
   taskArr: Task[];
-  setTaskArr: React.Dispatch<React.SetStateAction<Task[]>>;
+  dispatch: React.Dispatch<TaskAction>;
   TaskToUpdate: Task;
   setTaskToUpdate: React.Dispatch<React.SetStateAction<Task | null>>;
 }
 
 export default function EditTask({
   taskArr,
-  setTaskArr,
+  dispatch,
   TaskToUpdate,
   setTaskToUpdate,
 }: EditTaskProps) {
@@ -25,9 +26,7 @@ export default function EditTask({
   const handleUpdate = () => {
     if (!updatedTask.title.trim()) return; // Prevent empty title
 
-    setTaskArr((prev) =>
-      prev.map((t) => (t.id === TaskToUpdate.id ? updatedTask : t))
-    );
+    dispatch({ type: "UPDATE_TASK", payload: updatedTask });
     setTaskToUpdate(null);
     toast.success("Task updated successfully");
   };

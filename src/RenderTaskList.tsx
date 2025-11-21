@@ -7,18 +7,19 @@ import { Task, FilterType } from "./types";
 import { motion, AnimatePresence } from "framer-motion";
 import ConfirmDialog from "./ConfirmDialog";
 import { toast } from "react-hot-toast";
+import { TaskAction } from "./reducers/taskReducer";
 
 import noTasksImg from "./assets/no-tasks-v2.png";
 
 interface RenderTaskListProps {
   TaskArr: Task[];
-  setTaskArr: React.Dispatch<React.SetStateAction<Task[]>>;
+  dispatch: React.Dispatch<TaskAction>;
   Filter: FilterType;
 }
 
 export default function RenderTaskList({
   TaskArr,
-  setTaskArr,
+  dispatch,
   Filter,
 }: RenderTaskListProps) {
   const [SelectedtaskToUpdate, setTaskToUpdate] = useState<Task | null>(null);
@@ -39,18 +40,14 @@ export default function RenderTaskList({
 
   const confirmDelete = () => {
     if (taskToDelete) {
-      setTaskArr((prev) => prev.filter((t) => t.id !== taskToDelete.id));
+      dispatch({ type: "DELETE_TASK", payload: taskToDelete.id });
       setTaskToDelete(null);
       toast.success("Task deleted successfully");
     }
   };
 
   const toggleComplete = (task: Task) => {
-    setTaskArr((prev) =>
-      prev.map((t) =>
-        t.id === task.id ? { ...t, isCompleted: !t.isCompleted } : t
-      )
-    );
+    dispatch({ type: "TOGGLE_TASK", payload: task.id });
     toast.success(
       task.isCompleted ? "Task marked as pending" : "Task marked as completed"
     );
@@ -142,7 +139,7 @@ export default function RenderTaskList({
       {SelectedtaskToUpdate && (
         <EditTask
           taskArr={TaskArr}
-          setTaskArr={setTaskArr}
+          dispatch={dispatch}
           TaskToUpdate={
             SelectedtaskToUpdate ?? {
               id: 0,
