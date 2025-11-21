@@ -4,6 +4,8 @@ import RenderTaskList from "./RenderTaskList";
 import { Task, FilterType } from "./types";
 import { Toaster, toast } from "react-hot-toast";
 
+import logo from "./assets/logo.png";
+
 export default function ToDoApp() {
   const [taskArr, setTaskArr] = useState<Task[]>(() => {
     const saved = localStorage.getItem("tasks");
@@ -36,8 +38,8 @@ export default function ToDoApp() {
   return (
     <Container className="bg-white mt-24 py-4 space-y-3" maxWidth="sm">
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="flex justify-center">
-        <h1 className="text-3xl">My Tasks</h1>
+      <div className="flex justify-center mb-4">
+        <h1 className="text-3xl font-bold text-gray-800">My Tasks</h1>
       </div>
 
       {/* Filter buttons */}

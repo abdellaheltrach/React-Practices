@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import ConfirmDialog from "./ConfirmDialog";
 import { toast } from "react-hot-toast";
 
+import noTasksImg from "./assets/no-tasks-v2.png";
+
 interface RenderTaskListProps {
   TaskArr: Task[];
   setTaskArr: React.Dispatch<React.SetStateAction<Task[]>>;
@@ -57,64 +59,85 @@ export default function RenderTaskList({
   return (
     <div className="space-y-2 overflow-y-scroll max-h-[50vh] overflow-x-hidden p-1">
       <AnimatePresence mode="popLayout">
-        {filteredTasks.map((task) => (
+        {filteredTasks.length === 0 ? (
           <motion.div
-            key={task.id}
-            layout
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.2 }}
-            className="p-3 border rounded flex justify-between items-center bg-gray-50"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="flex flex-col items-center justify-center py-8 text-center"
           >
-            <div>
-              <h3
-                className={`font-bold ${
-                  task.isCompleted ? "line-through text-gray-400" : ""
-                }`}
-              >
-                {task.title}
-              </h3>
-              <p
-                className={`${
-                  task.isCompleted ? "line-through text-gray-400" : ""
-                }`}
-              >
-                {task.description}
-              </p>
-            </div>
-
-            <div className="flex space-x-2">
-              {/* Complete Icon */}
-              <button
-                onClick={() => toggleComplete(task)}
-                className={`p-2 rounded-full hover:bg-green-100`}
-              >
-                {task.isCompleted ? (
-                  <CheckIcon className="text-gray-400" />
-                ) : (
-                  <CheckIcon className="text-green-600" />
-                )}
-              </button>
-
-              {/* Update Icon */}
-              <button
-                onClick={() => setTaskToUpdate(task)}
-                className="p-2 rounded-full hover:bg-yellow-100 "
-              >
-                <EditIcon className="text-yellow-600" />
-              </button>
-
-              {/* Delete Icon */}
-              <button
-                onClick={() => setTaskToDelete(task)}
-                className="p-2 rounded-full hover:bg-red-100"
-              >
-                <DeleteIcon className="text-red-600" />
-              </button>
-            </div>
+            <img
+              src={noTasksImg}
+              alt="No tasks"
+              className="w-32 h-32 object-contain mb-4 opacity-80"
+            />
+            <p className="text-gray-500 text-lg font-medium">
+              No tasks found here!
+            </p>
+            <p className="text-gray-400 text-sm">
+              Time to relax or add a new task.
+            </p>
           </motion.div>
-        ))}
+        ) : (
+          filteredTasks.map((task) => (
+            <motion.div
+              key={task.id}
+              layout
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, x: -100 }}
+              transition={{ duration: 0.2 }}
+              className="p-3 border rounded flex justify-between items-center bg-gray-50"
+            >
+              <div>
+                <h3
+                  className={`font-bold ${
+                    task.isCompleted ? "line-through text-gray-400" : ""
+                  }`}
+                >
+                  {task.title}
+                </h3>
+                <p
+                  className={`${
+                    task.isCompleted ? "line-through text-gray-400" : ""
+                  }`}
+                >
+                  {task.description}
+                </p>
+              </div>
+
+              <div className="flex space-x-2">
+                {/* Complete Icon */}
+                <button
+                  onClick={() => toggleComplete(task)}
+                  className={`p-2 rounded-full hover:bg-green-100`}
+                >
+                  {task.isCompleted ? (
+                    <CheckIcon className="text-gray-400" />
+                  ) : (
+                    <CheckIcon className="text-green-600" />
+                  )}
+                </button>
+
+                {/* Update Icon */}
+                <button
+                  onClick={() => setTaskToUpdate(task)}
+                  className="p-2 rounded-full hover:bg-yellow-100 "
+                >
+                  <EditIcon className="text-yellow-600" />
+                </button>
+
+                {/* Delete Icon */}
+                <button
+                  onClick={() => setTaskToDelete(task)}
+                  className="p-2 rounded-full hover:bg-red-100"
+                >
+                  <DeleteIcon className="text-red-600" />
+                </button>
+              </div>
+            </motion.div>
+          ))
+        )}
       </AnimatePresence>
       {SelectedtaskToUpdate && (
         <EditTask
